@@ -17,6 +17,7 @@
  *   limitations under the License.
  *
  */
+import 'dotenv/config.js'
 import {
   WechatyBuilder,
   ScanStatus,
@@ -25,52 +26,23 @@ import {
 }                     from '../src/mods/mod.js' // from 'wechaty'
 
 import qrTerm from 'qrcode-terminal'
-import { FileBox } from 'file-box'
+import {
+  generateContextualReply,
+  loadKnowledgeBase,
+}                     from './atendimento-ai.js'
 
-/**
- *
- * 1. Declare your Bot!
- *
- */
 const options = {
   name : 'ding-dong-bot',
-
-  /**
-   * You can specify different puppet for different IM protocols.
-   * Learn more from https://wechaty.js.org/docs/puppet-providers/
-   */
-  // puppet: 'wechaty-puppet-whatsapp'
-
-  /**
-   * You can use wechaty puppet provider 'wechaty-puppet-service'
-   *   which can connect to Wechaty Puppet Services
-   *   for using more powerful protocol.
-   * Learn more about services (and TOKEN)from https://wechaty.js.org/docs/puppet-services/
-   */
-  // puppet: 'wechaty-puppet-service'
-  // puppetOptions: {
-  //   token: 'xxx',
-  // }
 }
 
 const bot = WechatyBuilder.build(options)
 
-/**
- *
- * 2. Register event handlers for Bot
- *
- */
 bot
   .on('logout', onLogout)
   .on('login',  onLogin)
   .on('scan',   onScan)
   .on('error',  onError)
   .on('message', onMessage)
-/**
- *
- * 3. Start the bot!
- *
- */
   .start()
   .catch(async e => {
     console.error('Bot start() fail:', e)
@@ -78,21 +50,9 @@ bot
     process.exit(-1)
   })
 
-/**
- *
- * 4. You are all set. ;-]
- *
- */
-
-/**
- *
- * 5. Define Event Handler Functions for:
- *  `scan`, `login`, `logout`, `error`, and `message`
- *
- */
 function onScan (qrcode: string, status: ScanStatus) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
-    qrTerm.generate(qrcode)
+    qrTerm.generate(qrcode, { small: true })
 
     const qrcodeImageUrl = [
       'https://wechaty.js.org/qrcode/',
@@ -103,12 +63,17 @@ function onScan (qrcode: string, status: ScanStatus) {
   } else {
     console.info('onScan: %s(%s)', ScanStatus[status], status)
   }
-
-  // console.info(`[${ScanStatus[status]}(${status})] ${qrcodeImageUrl}\nScan QR Code above to log in: `)
 }
 
 function onLogin (user: Contact) {
+  const kb = loadKnowledgeBase()
+  const hasGemini = Boolean(
+    process.env['GEMINI_API_KEY']
+    && process.env['GEMINI_API_KEY'] !== 'sua_chave_gemini_aqui',
+  )
   console.info(`${user.name()} login`)
+  console.info(`✅ Atendimento Contextualizado Ativo: ${kb.empresa.nome}`)
+  console.info(`🧠 Motor IA Gemini (${process.env['GEMINI_MODEL'] || 'gemini-2.5-flash'}): ${hasGemini ? 'ATIVO' : 'MODO HÍBRIDO LOCAL (defina GEMINI_API_KEY no .env para ativar a IA)'}`)
 }
 
 function onLogout (user: Contact) {
@@ -117,68 +82,48 @@ function onLogout (user: Contact) {
 
 function onError (e: Error) {
   console.error('Bot error:', e)
-  /*
-  if (bot.isLoggedIn) {
-    bot.say('Wechaty error: ' + e.message).catch(console.error)
-  }
-  */
 }
 
-/**
- *
- * 6. The most important handler is for:
- *    dealing with Messages.
- *
- */
 async function onMessage (msg: Message) {
   console.info(msg.toString())
 
   if (msg.self()) {
-    console.info('Message discarded because its outgoing')
     return
   }
 
   if (msg.age() > 2 * 60) {
-    console.info('Message discarded because its TOO OLD(than 2 minutes)')
+    console.info('Mensagem ignorada por ter mais de 2 minutos')
     return
   }
 
-  if (msg.type() !== bot.Message.Type.Text
-    || !/^(ding|ping|bing|code)$/i.test(msg.text())
-  ) {
-    console.info('Message discarded because it does not match ding/ping/bing/code')
+  // Ignora grupos por padrão (a menos que BOT_IGNORE_GROUPS=false no .env)
+  if (msg.room() && process.env['BOT_IGNORE_GROUPS'] !== 'false') {
     return
   }
 
-  /**
-   * 1. reply 'dong'
-   */
-  await msg.say('dong')
-  console.info('REPLY: dong')
+  if (msg.type() !== bot.Message.Type.Text) {
+    return
+  }
 
-  /**
-   * 2. reply image(qrcode image)
-   */
-  const fileBox = FileBox.fromUrl('https://wechaty.github.io/wechaty/images/bot-qr-code.png')
+  const text = msg.text().trim()
+  if (!text) {
+    return
+  }
 
-  await msg.say(fileBox)
-  console.info('REPLY: %s', fileBox.toString())
+  const talker = msg.talker()
+  const contactId = talker.id
+  const contactName = talker.name() || 'Cliente'
 
-  /**
-   * 3. reply 'scan now!'
-   */
-  await msg.say([
-    'Join Wechaty Developers Community\n\n',
-    'Scan now, because other Wechaty developers want to talk with you too!\n\n',
-    '(secret code: wechaty)',
-  ].join(''))
+  const reply = await generateContextualReply(contactId, contactName, text)
+  if (!reply) {
+    console.info(`[Atendimento Humano Ativo] Mensagem de ${contactName} aguarda resposta humana.`)
+    return
+  }
+
+  await msg.say(reply)
+  console.info(`RESPOSTA para ${contactName}: ${reply.replace(/\n+/g, ' | ')}`)
 }
 
-/**
- *
- * 7. Output the Welcome Message
- *
- */
 const welcome = `
 | __        __        _           _
 | \\ \\      / /__  ___| |__   __ _| |_ _   _
@@ -188,18 +133,9 @@ const welcome = `
 |                                     |___/
 
 =============== Powered by Wechaty ===============
--------- https://github.com/wechaty/wechaty --------
+-------- Atendimento Contextualizado & IA --------
           Version: ${bot.version()}
 
-I'm a bot, my superpower is talk in Wechat.
-
-If you send me a 'ding', I will reply you a 'dong'!
-__________________________________________________
-
-Hope you like it, and you are very welcome to
-upgrade me to more superpowers!
-
-Please wait... I'm trying to login in...
-
+Iniciando o assistente de atendimento no WhatsApp...
 `
 console.info(welcome)

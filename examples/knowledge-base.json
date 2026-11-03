@@ -1,0 +1,103 @@
+{
+  "empresa": {
+    "nome": "Finev Oper1one",
+    "segmento": "Atendimento Comercial, Soluções Digitais e Suporte ao Cliente",
+    "descricao": "Especialistas em soluções tecnológicas, automação de atendimento, serviços digitais e suporte personalizado.",
+    "moeda": "AOA (Kz)",
+    "localizacao": "Luanda, Angola (Atendimento presencial com agendamento e online para todo o país)",
+    "horarioAtendimento": "Segunda a Sexta das 08h00 às 18h00 | Sábado das 08h00 às 13h00",
+    "contatos": {
+      "whatsapp": "+244 933 731 310",
+      "email": "contato@finev.ao"
+    }
+  },
+  "regrasDeAtendimento": [
+    "Seja sempre cordial, profissional, direto e prestativo.",
+    "Baseie todas as informações estritamente nos dados desta base de conhecimento e no histórico da conversa atual.",
+    "Nunca invente preços, prazos, contas bancárias, promoções ou serviços que não estejam listados aqui.",
+    "Se o cliente perguntar algo que não consta na base de conhecimento, informe com transparência o que sabemos e ofereça encaminhar para um atendente humano (digitando *atendente*).",
+    "Use formatação adequada para WhatsApp: *negrito* para destaques e listas curtas para facilitar a leitura.",
+    "Chame o cliente pelo nome quando disponível e mantenha o contexto do que ele perguntou anteriormente."
+  ],
+  "menuPrincipal": {
+    "saudacao": "Olá, *{nome}*! Bem-vindo(a) ao atendimento da *{empresa}*.",
+    "opcoes": [
+      {
+        "codigo": "1",
+        "titulo": "Catálogo de Serviços e Preços",
+        "resumo": "Conheça os nossos planos, serviços digitais e valores atualizados."
+      },
+      {
+        "codigo": "2",
+        "titulo": "Como Contratar / Formas de Pagamento",
+        "resumo": "Veja o passo a passo para aderir e os meios de pagamento aceites."
+      },
+      {
+        "codigo": "3",
+        "titulo": "Suporte Técnico",
+        "resumo": "Ajuda com serviços ativos, configurações ou resolução de problemas."
+      },
+      {
+        "codigo": "4",
+        "titulo": "Horário e Localização",
+        "resumo": "Consulte o nosso horário de expediente e canais de contato."
+      },
+      {
+        "codigo": "5",
+        "titulo": "Falar com Atendente Humano",
+        "resumo": "Transfere o seu atendimento para um especialista da nossa equipa."
+      }
+    ]
+  },
+  "servicos": [
+    {
+      "id": "automacao-whatsapp",
+      "nome": "Automação de Atendimento no WhatsApp (Chatbot IA)",
+      "preco": "Sob orçamento (planos a partir de 45.000 Kz/mês)",
+      "prazoEntrega": "3 a 5 dias úteis",
+      "detalhes": "Configuração completa de assistente virtual inteligente com base de conhecimento personalizada, triagem de clientes e suporte 24/7."
+    },
+    {
+      "id": "consultoria-digital",
+      "nome": "Consultoria e Integração de Sistemas",
+      "preco": "Sob análise técnica",
+      "prazoEntrega": "Conforme escopo do projeto",
+      "detalhes": "Integração de APIs, automação de processos internos, CRM e otimização de fluxos de vendas."
+    },
+    {
+      "id": "suporte-manutencao",
+      "nome": "Plano de Suporte e Manutenção Mensal",
+      "preco": "25.000 Kz/mês",
+      "prazoEntrega": "Ativação imediata",
+      "detalhes": "Monitoramento contínuo, atualizações da base de conhecimento, ajustes de fluxo e suporte prioritário."
+    }
+  ],
+  "formasDePagamento": [
+    "Transferência Bancária (IBAN enviado após confirmação do orçamento/pedido)",
+    "Multicaixa Express",
+    "Depósito bancário identificado"
+  ],
+  "faq": [
+    {
+      "pergunta": "Como funciona o processo de contratação?",
+      "palavrasChave": ["contratar", "aderir", "comprar", "como funciona", "processo", "passo a passo"],
+      "resposta": "O processo é simples:\n1. Escolha o serviço desejado ou descreva a sua necessidade.\n2. Enviamos a proposta comercial ajustada ao seu negócio.\n3. Após confirmação do pagamento de adesão, iniciamos a configuração e entregamos no prazo combinado."
+    },
+    {
+      "pergunta": "Posso personalizar as respostas e preços do meu bot?",
+      "palavrasChave": ["personalizar", "customizar", "editar", "mudar", "respostas", "contexto"],
+      "resposta": "Sim! Toda a base de conhecimento (serviços, preços, perguntas frequentes e tom de voz) é 100% personalizada para a realidade da sua empresa."
+    },
+    {
+      "pergunta": "O atendimento funciona 24 horas?",
+      "palavrasChave": ["24 horas", "24h", "madrugada", "fim de semana", "domingo", "feriado"],
+      "resposta": "O nosso assistente virtual responde 24 horas por dia, 7 dias por semana. Já a equipa humana atende de Segunda a Sexta das 08h00 às 18h00 e aos Sábados das 08h00 às 13h00."
+    },
+    {
+      "pergunta": "Como solicitar suporte técnico?",
+      "palavrasChave": ["suporte", "problema", "erro", "ajuda tecnica", "defeito", "assistencia"],
+      "resposta": "Para suporte técnico rápido, informe aqui no chat:\n1. O nome da sua empresa ou número de contrato\n2. Uma breve descrição do que está a acontecer\nSe preferir, digite *atendente* para falar diretamente com a equipa técnica."
+    }
+  ]
+}
+

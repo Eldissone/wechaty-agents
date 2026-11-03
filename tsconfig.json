@@ -7,6 +7,10 @@
     // See: https://github.com/wechaty/wechaty/issues/2551
     "ignoreDeprecations": "5.0"
   },
+  "ts-node": {
+    "transpileOnly": true,
+    "transpiler": false
+  },
   "exclude": [
     "node_modules/",
     "dist/",

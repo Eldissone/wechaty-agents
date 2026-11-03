@@ -32,6 +32,11 @@
     "node": ">=16",
     "npm": ">=7"
   },
+  "overrides": {
+    "redux-observable": "1.2.0",
+    "wechaty-grpc": "1.3.0",
+    "flash-store": "1.3.4"
+  },
   "wechaty": {
     "DEFAULT_PORT": 8080,
     "DEFAULT_PROTOCOL": "io|0.0.1",
@@ -43,9 +48,9 @@
     "clean": "shx rm -fr dist/*",
     "coverage": "nyc report --reporter=lcov",
     "cli": "node --no-warnings --loader ts-node/esm bin/cli.ts",
-    "demo": "cross-env NODE_OPTIONS=\"--no-warnings --loader=ts-node/esm\" node examples/ding-dong-bot.ts",
+    "demo": "cross-env NODE_OPTIONS=\"-r dotenv/config --no-warnings --loader=ts-node/esm\" node examples/ding-dong-bot.ts",
     "dist": "npm-run-all clean build dist:commonjs",
-    "dist:commonjs": "jq -n \"{ type: \\\"commonjs\\\" }\" > dist/cjs/package.json",
+    "dist:commonjs": "node -e \"fs.writeFileSync('dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2) + '\\n')\"",
     "docs": "bash -x scripts/generate-docs.sh",
     "doctor": "node --no-warnings --loader=ts-node/esm bin/doctor.ts",
     "io-client": "node --no-warnings --loader=ts-node/esm bin/io-client.ts",
@@ -120,6 +125,7 @@
     "get-port": "^6.1.2",
     "json-rpc-peer": "^0.17.0",
     "memory-card": "^1.1.2",
+    "nodemon": "^3.1.14",
     "open-graph": "^0.2.6",
     "rx-queue": "^1.0.5",
     "state-switch": "^1.6.3",
@@ -127,7 +133,9 @@
     "wechaty-puppet": "^1.20.1",
     "wechaty-puppet-service": "^1.19.8",
     "wechaty-puppet-wechat4u": "^1.13.15",
+    "wechaty-puppet-whatsapp": "^1.16.0",
     "wechaty-token": "^1.1.1",
+    "whatsapp-web.js": "^1.34.7",
     "ws": "^8.5.0"
   },
   "devDependencies": {
@@ -135,6 +143,7 @@
     "@chatie/git-scripts": "^0.6.2",
     "@chatie/semver": "^0.6.0",
     "@chatie/tsconfig": "^4.6.3",
+    "@jridgewell/sourcemap-codec": "1.5.0",
     "@types/cross-spawn": "^6.0.2",
     "@types/dotenv": "^8.2.0",
     "@types/glob": "^7.2.0",
@@ -153,6 +162,8 @@
     "sloc": "^0.2.1",
     "typed-emitter": "^1.5.0-from-event",
     "typedoc": "^1.0.0-dev.4 ",
+    "typescript": "5.0.4",
+    "wechaty-grpc": "1.3.0",
     "wechaty-puppet-mock": "^1.18.2",
     "wechaty-puppet-padlocal": "^1.11.13"
   },
